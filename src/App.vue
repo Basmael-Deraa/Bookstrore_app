@@ -1,22 +1,22 @@
 <template>
   <div id="app">
-    <books></books>
+  
   </div>
 </template>
 
 <script>
-import Test from "./components/test"
+import Login from "./components/login"
 import Books from "./components/books"
 
 export default {
   name: 'App',
   components: {
-   Test, Books
+    Login, Books
   }
 }
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

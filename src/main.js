@@ -1,35 +1,34 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import Axios from 'axios'
 import vueResource from 'vue-resource'
 import vueRouter from 'vue-router'
+import BootstrapVue from 'bootstrap-vue'
 import App from './App'
+import router from './router'
+import Hello from './components/Hello'
+import Login from './components/Login'
+import Register from './components/Register'
 import Books from './components/Books'
-import Test from './components/Test'
+import Admin from './components/Admin'
 
-// Vue.config.productionTip = false
+require('./assets/css/bootstrap.min.css')
+require('./assets/css/main.css')
+
+Vue.prototype.$http = Axios;
+
+Vue.config.productionTip = false
 Vue.use(vueResource)
 Vue.use(vueRouter)
-
-const router = new vueRouter({
-  mode: 'history',
-  base: __dirname,
-  routes: [
-    {path: '/', component: Books},
-    {path: '/test', component: Test}
-  ]
-});
+Vue.use(BootstrapVue);
 
 /* eslint-disable no-new */
 new Vue({
   router,
+  components: { App },
   template: `
     <div id="app">
-      <ul>
-        <li><router-link to="/">Books</router-link></li>
-        <li><router-link to="/test">Test</router-link></li>
-      </ul>
       <router-view></router-view>
-    </div>
-  `,
+    </div>  `
 }).$mount('#app')

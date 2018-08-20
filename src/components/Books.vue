@@ -1,42 +1,69 @@
 <template>
     <div class="books">
-       <h1>Books List</h1>
-       <input type="text" v-model="search" placeholder="Search...">
-       <br />
-       <label>Sort:</label>
-       <button @click="toggle()">Asc/Desc</button>
-       <!-- <span v-if="sortType='asc' " @click="toggle()">&lt;</span>
-       <span v-if="sortType='desc' " @click="toggle()">&gt;</span> -->
-       <br/>
-       <table>
-          <thead>
-              <tr>
-                  <th>Title</th>
-                  <th>Author</th>
-                  <th>Price</th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr v-for="book in filteredBooks">
-                  <td> <button v-on:click="deleteBook(book)">×</button> {{ book.title }}</td>
-                  <td>{{ book.author }}</td>
-                  <td>{{ book.price }}</td>
-              </tr>
-          </tbody>
-        </table>
-        <br />
-        <form v-on:submit="addBook">
-          <label>Title: </label>
-          <input type="text" v-model="newBook.title" placeholder="Enter the title">
-          <br />
-          <label>Author: </label>
-          <input type="text" v-model="newBook.author" placeholder="Enter the author">
-          <br />
-          <label>Price: </label>
-          <input type="text" v-model="newBook.price" placeholder="Enter the price">
-          <br />
-          <input type="submit" value="Submit">
-        </form>
+      <div class="container">
+
+        <h1>Books List</h1>
+        <div class="row">
+            <div class="col-sm-9">
+               <input class="form-control" type="text" v-model="search" placeholder="Search book...">
+            </div>
+            <div class="col-sm-3 form-group">
+               <label class="">Sort:</label>
+               <button class="btn btn-dark" @click="toggle()">Asc/Desc</button>
+            </div>
+        </div>
+        <!-- list of books -->
+        <b-card-group deck>
+            <b-card v-for="book in filteredBooks">
+              <img :src="book.url" alt="">
+              <h4>{{book.title}}</h4>
+              <p><strong>{{book.author}}</strong></p>
+              <p class="card-text">
+                Some quick example text to build on the card title and make up the bulk of the card's content.
+              </p>
+              <b-button v-bind:href="book.link" target="_blank" variant="primary">View Book</b-button>
+              <span class="price">{{book.price}}</span>
+            </b-card>
+         </b-card-group>
+
+        <!-- modal -->
+        <div class="btns" v-show="is_admin">
+          <b-button @click="showModal">Add book</b-button>
+          <button class="btn btn-danger" v-on:click="deleteBook(book)">Delete Book</button>
+        </div>
+        <b-modal ref="myModalRef" hide-footer title="Add new book">
+          <div class="d-block">
+            <form>
+              <div class="form-group">
+              <label>Title: </label>
+              <input class="form-control" type="text" v-model="newBook.title" placeholder="Enter the title" required autofocus>
+            </div>
+            <div class="form-group">
+              <label>Author: </label>
+              <input class="form-control" type="text" v-model="newBook.author" placeholder="Enter the author" required>
+            </div>
+            <div class="form-group">
+              <label>Price: </label>
+              <input class="form-control" type="text" v-model="newBook.price" placeholder="Enter the price" required>
+            </div>
+            <div class="form-group">
+              <input
+              style="display:none"
+              type="file"
+              @change="onFileSelected"
+              ref="fileInput"
+              accept="image/*">
+              <button class="btn btn-primary" @click="$refs.fileInput.click()">Choose file</button>
+              <div  v-if="imageURL.length > 0">
+                <img class="preview" :src="imageURL">
+              </div>
+            </div>
+              <button class="btn btn-dark form-control add-book" @click="addBook">Submit</button>
+            </form>
+          </div>
+        </b-modal>
+
+      </div>
     </div>
 </template>
 
@@ -48,35 +75,33 @@
                 newBook: {},
                 search: '',
                 isSort: false,
-                // sortType: {
-                //   state:'initial',
-                //   stateOne: 'asc',
-                //   stateTwo: 'desc'
-                // },
+                sortType: 'default',
+                selectedFile: null,
+                is_admin: true,
+                imageURL: '',
                 books: [
                   {
+                      url: 'https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9780743273565/the-great-gatsby-9780743273565_hr.jpg',
                       title: 'The Great Gatsby',
                       author: 'F. Scott Fitzgerald',
                       price: '$54.99'
                   },
                   {
+                      url: 'https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/the-grapes-of-wrath-spec-cover-harold-shull.jpg',
                       title: 'The Grapes of Wrath',
                       author: 'John Steinbeck',
                       price: '$39.60'
                   },
                   {
+                      url: 'https://pbs.twimg.com/media/DPP-tigX4AA472i.jpg',
                       title: 'Nineteen Eighty-Four',
                       author: 'George Orwell',
-                      price: '$102.00'
+                      price: '$12.00'
                   },
                   {
-                      title: 'Eighty-Four',
-                      author: 'George Orwell',
-                      price: '$102.00'
-                  },
-                  {
-                      title: 'Good Father',
-                      author: 'George Orwell',
+                      url: 'https://www.hodder.co.uk/assets/HodderStoughton/img/book/395/isbn9781444730395.jpg',
+                      title: 'The Good Father',
+                      author: 'Noah Hawley',
                       price: '$50.00'
                   },
                 ]
@@ -85,11 +110,13 @@
         methods: {
           addBook: function(e) {
             this.books.push({
+              url: this.newBook.url,
               title: this.newBook.title,
               author: this.newBook.author,
-              price: this.newBook.price
+              price: this.newBook.price,
             });
             e.preventDefault();
+            this.newBook = ""
           },
           deleteBook: function(book) {
             this.books.splice(this.books.indexOf(book), 1);
@@ -103,6 +130,7 @@
                   return 1;
                 return 0;
               }
+              this.sortType = 'asc';
               return this.books.sort(compare);
             }
             function compare(a, b) {
@@ -112,15 +140,27 @@
                 return -1;
               return 0;
             }
+            this.sortType = 'desc';
             return this.books.sort(compare);
+          },
+          showModal () {
+             this.$refs.myModalRef.show()
+          },
+          onFileSelected(event) {
+            var input = event.target;
+            if (input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imageURL = e.target.result;
+                }
+                this.book.url = reader.readAsDataURL(input.files[0]);
             }
+          }
         },
         computed: {
           filteredBooks: function() {
             return this.books.filter((book) => {
-              return book.title.match(this.search)
-                  || book.author.match(this.search)
-                  || book.price.match(this.search)
+              return book.title.toLowerCase().includes(this.search.toLowerCase())
             });
           }
         }
