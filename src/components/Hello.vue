@@ -2,9 +2,9 @@
   <div class="hello">
       <h1>Basma Bookstore</h1>
       <ul>
-        <li><router-link to="/books">View books</router-link></li>
+        <li><router-link to="/Books">View Books</router-link></li>
         <span> or </span>
-        <li><router-link to="/login">Log in</router-link></li>
+        <li><router-link to="/Login">Log in</router-link></li>
       </ul>
   </div>
 </template>
@@ -18,21 +18,21 @@ export default {
 </script>
 
 <style>
-ul {
+.hello ul {
   list-style-type: none;
   padding: 0;
   text-align: center;
 }
-li {
+.hello li {
   display: inline-block;
   border: 2px solid #eee;
   border-radius: 5px;
   padding: 10px 19px;
 }
-li a {
+.hello li a {
   color: white;
 }
-li a:hover {
+.hello li a:hover {
   text-decoration: none;
   color: white
 }

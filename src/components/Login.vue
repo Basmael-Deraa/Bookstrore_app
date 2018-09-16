@@ -1,12 +1,12 @@
 <template>
-  <div class="login">
+  <div class="Login">
     <div class="container">
-      <div class="login-title">
+      <div class="title">
         <h3>Log in</h3>
       </div>
       <div class="row">
         <div class="col-md-6">
-          <form class="login-form">
+          <form class="form">
             <div class="row">
               <div class="col-sm-12 form-group">
                 <label for="email">E-mail: </label>
@@ -29,7 +29,7 @@
 
 <script>
   export default {
-    name: 'login',
+    name: 'Login',
     data() {
       return {
           email : '',
@@ -40,7 +40,7 @@
          handleSubmit(e){
           e.preventDefault()
           if (this.password.length > 0) {
-            this.$http.post('http://localhost:8080/login', {
+            this.$http.post('http://localhost:8080/Login', {
               email: this.email,
               password: this.password
             })
@@ -59,7 +59,7 @@
                           this.$router.push('admin')
                       }
                       else {
-                          this.$router.push('books')
+                          this.$router.push('Books')
                       }
                   }
               }

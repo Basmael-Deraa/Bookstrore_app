@@ -13,21 +13,18 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      component: Hello
+      component: Books
     },
     {
-      path: '/login',
+      path: '/Login',
       component: Login,
     },
     {
       path: '/register',
       component: Register,
-      // meta: {
-      //     guest: true
-      // }
     },
     {
-      path: '/books',
+      path: '/Books',
       component: Books,
       meta: {
         requiresAuth: true
@@ -49,7 +46,7 @@ router.beforeEach((to, from, next) => {
     if(to.matched.some(record => record.meta.requiresAuth)) {
         if (localStorage.getItem('jwt') == null) {
             next({
-                path: '/login',
+                path: '/Login',
                 params: { nextUrl: to.fullPath }
             })
         } else {
@@ -59,7 +56,7 @@ router.beforeEach((to, from, next) => {
                     next()
                 }
                 else{
-                    next({ path: '/books'})
+                    next({ path: '/Books'})
                 }
             }else {
                 next()
@@ -70,7 +67,7 @@ router.beforeEach((to, from, next) => {
             next()
         }
         else{
-            next({ path: '/books'})
+            next({ path: '/Books'})
         }
     }else {
         next()

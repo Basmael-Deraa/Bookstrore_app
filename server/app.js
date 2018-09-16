@@ -60,8 +60,8 @@ router.post('/register-admin', function(req, res) {
     });
 });
 
-// login
-router.post('/login', (req, res) => {
+// Login
+router.post('/Login', (req, res) => {
     db.selectByEmail(req.body.email, (err, user) => {
         if (err) return res.status(500).send('Error on the server.');
         if (!user) return res.status(404).send('No user found.');

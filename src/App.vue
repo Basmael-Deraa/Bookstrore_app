@@ -1,12 +1,11 @@
 <template>
   <div id="app">
-  
   </div>
 </template>
 
 <script>
-import Login from "./components/login"
-import Books from "./components/books"
+import Login from "./components/Login"
+import Books from "./components/Books"
 
 export default {
   name: 'App',
